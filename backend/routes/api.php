@@ -12,6 +12,9 @@ use App\Http\Controllers\WarehousesController;
 use App\Http\Controllers\CollaboratorsController;
 use App\Http\Controllers\CollaboratorAttendancesController;
 use App\Http\Controllers\CollaboratorReceiptsController;
+use App\Http\Controllers\ECommerce\OrdersController;
+use App\Http\Controllers\ECommerce\OrderPaymentsController;
+use App\Http\Controllers\Payments\MercadoPagoWebhookController;
 
 // ── Público (sin token)
 Route::prefix('auth')->group(function () {
@@ -23,8 +26,16 @@ Route::prefix('auth')->group(function () {
 
 });
 
+// Webhooks (públicos)
+Route::post('webhooks/mercadopago', [MercadoPagoWebhookController::class, 'handle']);
+
 // ── Protegido (con token Bearer)
 Route::middleware('auth:sanctum')->group(function () {
+    // E-commerce: pedidos
+    Route::post('orders', [OrdersController::class, 'store']);
+    Route::get('orders/{order}', [OrdersController::class, 'show']);
+    Route::post('orders/{order}/mercadopago/preference', [OrdersController::class, 'preference']);
+    Route::post('orders/{order}/payments/manual', [OrderPaymentsController::class, 'confirmManual']);
 
     // Auth
     Route::get('auth/me',       [AuthController::class, 'me']);

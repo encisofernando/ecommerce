@@ -4,12 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class SaleItem extends Model
+class OrderItem extends Model
 {
-    public $timestamps = true;
-
     protected $fillable = [
-        'sale_id',
+        'order_id',
         'product_id',
         'variant_id',
         'description',
@@ -19,7 +17,7 @@ class SaleItem extends Model
         'tax_id',
         'tax_rate',
         'tax_amount',
-        'line_total',
+        'line_total'
     ];
 
     protected $casts = [
@@ -31,9 +29,7 @@ class SaleItem extends Model
         'line_total'=>'float',
     ];
 
-    public function sale(){ return $this->belongsTo(Sale::class); }
+    public function order(){ return $this->belongsTo(Order::class); }
 
     public function variant(){ return $this->belongsTo(ProductVariant::class, 'variant_id'); }
-
-    public function product(){ return $this->belongsTo(Product::class); }
 }
